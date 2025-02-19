@@ -16,25 +16,16 @@ RUN npm install
 
 # Copy src files & folders over (COPY src dest)
 COPY . .
-#COPY public public
-#COPY src src
-#COPY node_modules node_modules
-#COPY Caddyfile .
 
 # Install the dependencies and build the Angular app
-#RUN npm install
 RUN npm run build
-
-# Build ng app
-#ENTRYPOINT ["ng", "build"]
-
 
 ### STAGE 2: Create final image
 #------------------------------------
 FROM caddy:latest
 
 # Set working dir
-WORKDIR /app
+WORKDIR /webapp
 
 # Copy over browser (Angular build output) from 1st container (builder) into 2nd container
 COPY --from=builder /compileDir/dist/day32_workshop/browser /webapp/browser
