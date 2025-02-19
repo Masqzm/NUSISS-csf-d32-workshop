@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Order } from './models';
 
 @Component({
@@ -56,13 +56,16 @@ export class AppComponent implements OnInit {
 
   // Validations
   // Overall validator for form
-  protected invalid(): boolean {
+  protected invalidForm(): boolean {
     return this.form.invalid || this.lineItems.controls.length <= 0
   }
 
-  // Checks if form control is invalid if it has been modified
-  protected isCtrlInvalid(ctrlName: string): boolean {
-    console.info(ctrlName, ' invalid: ',  (!!this.form.get(ctrlName)?.invalid && !!this.form.get(ctrlName)?.dirty) )
-    return !!this.form.get(ctrlName)?.invalid && !!this.form.get(ctrlName)?.dirty
+  protected invalid(ctrlName: string): boolean {
+    return this.grpCtrlInvalid(this.form, ctrlName)
+  }
+  // Checks if form has been modified & control is invalid from a given formgroup 
+  protected grpCtrlInvalid(grp: FormGroup | AbstractControl, ctrlName: string): boolean {
+    const ctrl = grp.get(ctrlName)
+    return !ctrl?.pristine && !!ctrl?.invalid
   }
 }

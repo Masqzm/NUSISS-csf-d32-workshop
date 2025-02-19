@@ -4,19 +4,19 @@
   <table>
     <tr>
       <td>Name</td>
-      <td><input type="text" size="30" formControlName="name" [ngClass]="{'error': isCtrlInvalid('name')}"></td>
+      <td><input type="text" size="30" formControlName="name" [ngClass]="{'error': invalid('name')}"></td>
     </tr>
     <tr>
       <td>Address</td>
-      <td><input type="text" formControlName="address" [ngClass]="{'error': isCtrlInvalid('address')}"></td>
+      <td><input type="text" formControlName="address" [ngClass]="{'error': invalid('address')}"></td>
     </tr>
     <tr>
       <td>Email</td>
-      <td><input type="text" formControlName="email" [ngClass]="{'error': isCtrlInvalid('email')}"></td>
+      <td><input type="text" formControlName="email" [ngClass]="{'error': invalid('email')}"></td>
     </tr>
     <tr>
       <td>Delivery Date</td>
-      <td><input type="date" formControlName="deliveryDate" [ngClass]="{'error': isCtrlInvalid('deliveryDate')}"></td>
+      <td><input type="date" formControlName="deliveryDate" [ngClass]="{'error': invalid('deliveryDate')}"></td>
     </tr>
     <tr>
       <td>Rush</td>
@@ -24,7 +24,7 @@
     </tr>
     <tr>
       <td></td>
-      <td> <button type="submit" [disabled]="invalid()">Place Order</button> </td>
+      <td> <button type="submit" [disabled]="invalidForm()">Place Order</button> </td>
       <td> <button type="button" (click)="addItem()">Add Item</button> </td>
     </tr>
   </table>
@@ -45,10 +45,10 @@
         @for (li of lineItems.controls; let idx = $index; track li) {
           <tr [formGroupName]="idx">
             <td> {{idx + 1}} </td>
-            <td> <input type="text" size="20" formControlName="itemName" [ngClass]="{'error': isCtrlInvalid('itemName')}"> 
-              Invalid: {{ isCtrlInvalid('itemName') }} </td>
-            <td> <input type="number" formControlName="quantity" [ngClass]="{'error': isCtrlInvalid('quantity')}"> </td>
-            <td> <input type="number" formControlName="price" [ngClass]="{'error': isCtrlInvalid('price')}"> </td>
+            <td> <input type="text" size="20" formControlName="itemName" [ngClass]="{'error': grpCtrlInvalid(li, 'itemName')}"> 
+              Invalid: {{ grpCtrlInvalid(li, 'itemName') }} </td>
+            <td> <input type="number" formControlName="quantity" [ngClass]="{'error': grpCtrlInvalid(li, 'quantity')}"> </td>
+            <td> <input type="number" formControlName="price" [ngClass]="{'error': grpCtrlInvalid(li, 'price')}"> </td>
             <td><button type="button" (click)="delItem(idx)">X</button></td>
           </tr>
         }
