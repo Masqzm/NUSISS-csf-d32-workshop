@@ -3,35 +3,41 @@
 # Install Node.js
 FROM node:23.8 AS builder
 
-LABEL maintainer="hazim"
-
 # Set working dir
 WORKDIR /compileDir
 
-# Copy package.json and package-lock.json to leverage Docker cache for npm install
-COPY package*.json ./
+RUN npm i -g @angular/cli
 
-# Install necessary dependencies/modules
-RUN npm install
+# Copy src files & folders into container [COPY src(cli root) dest(workdir)]
+COPY angular.json .
+COPY package.json .
+COPY package-lock.json .
+COPY tsconfig.app.json .
+COPY tsconfig.spec.json .
+COPY tsconfig.json .
+COPY public public
+COPY src src
 
-# Copy src files & folders over (COPY src dest)
-COPY . .
+# Install packages from package.json (outputs => node_module)
+RUN npm ci
 
-# Install the dependencies and build the Angular app
-RUN npm run build
+# Build the Angular app (=> dist/<proj name>/browser)
+RUN ng build
 
 ### STAGE 2: Create final image
 #------------------------------------
-FROM caddy:latest
+FROM caddy:2-alpine
+
+LABEL maintainer="hazim"
 
 # Set working dir
 WORKDIR /webapp
 
-# Copy over browser (Angular build output) from 1st container (builder) into 2nd container
+# Copy over Angular build output from 1st container (builder) into 2nd container
 COPY --from=builder /compileDir/dist/day32_workshop/browser /webapp/browser
 
-# Copy the Caddyfile to the final location
-COPY Caddyfile /webapp
+# Copy the Caddyfile to working dir
+COPY Caddyfile .
 
 # Set environment variables
 ENV SERVER_PORT=8080
@@ -40,4 +46,4 @@ ENV SERVER_PORT=8080
 EXPOSE ${SERVER_PORT}
 
 # Run app
-ENTRYPOINT caddy run --config /webapp/Caddyfile
+ENTRYPOINT caddy run --config ./Caddyfile

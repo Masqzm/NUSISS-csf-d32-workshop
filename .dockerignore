@@ -3,10 +3,9 @@ node_modules
 
 # Ignore build outputs
 dist
-compileDir
 
 # Ignore local Angular cache
-.angular/cache
+.angular
 
 Dockerfile
 .git
