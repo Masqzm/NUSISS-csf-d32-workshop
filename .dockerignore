@@ -1,0 +1,15 @@
+# Ignore node_modules
+node_modules
+
+# Ignore build outputs
+dist
+compileDir
+
+# Ignore local Angular cache
+.angular/cache
+
+Dockerfile
+.git
+.gitignore
+.gitattributes
+README.md
